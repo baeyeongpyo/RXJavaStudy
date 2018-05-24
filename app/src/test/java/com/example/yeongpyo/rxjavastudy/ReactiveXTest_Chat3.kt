@@ -3,7 +3,7 @@ package com.example.yeongpyo.rxjavastudy
 import io.reactivex.Observable
 import io.reactivex.functions.Function
 import org.junit.Test
-
+import java.util.*
 
 
 class ReactiveXTest_Chat3 {
@@ -57,13 +57,24 @@ class ReactiveXTest_Chat3 {
         val Times_table_fun = Function<Int, Observable<String>> { num ->
             Observable.range(1,9).map { row -> "$num * $row = ${num * row}" } }
 
-//        Observable.just(3)
-//                .flatMap( Times_table_fun )
-//                .subscribe(System.out::println)
-
-        Times_table_fun.apply(3).subscribe(System.out::println)
+        Observable.just(3)
+                .flatMap( Times_table_fun )
+                .subscribe(System.out::println)
+//        Times_table_fun.apply(3).subscribe(System.out::println)
 
     }
 
+    @Test
+    fun rxFilter(){
+        val arr = ArrayList<String>(Arrays.asList("1 Circle", "2 Diamond", "3 Triangle", "4 Circle", "5 Diamond"))
+        Observable.fromIterable(arr.asIterable()).filter { obj -> obj.endsWith("Circle") }
+                .subscribe(System.out::println)
+    }
 
+    @Test
+    fun rxReduce(){
+        Observable.just("1", "2", "3", "4")
+                .reduce { t1, t2 -> "${t2} + ${t1} " }
+                .subscribe(System.out::println)
+    }
 }
