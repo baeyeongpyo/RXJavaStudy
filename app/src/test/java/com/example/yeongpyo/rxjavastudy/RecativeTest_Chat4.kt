@@ -76,4 +76,17 @@ class RecativeTest_Chat4 {
         subject.doOnComplete { println("Complete") }
                 .subscribe(System.out::println)
     }
+
+    @Test
+    fun rxHeart_Beat(){
+        val printmessage = "PrintMessage"
+        Observable.timer(1, TimeUnit.SECONDS)
+                .map { i -> printmessage }
+                .repeat()
+                .subscribe{
+                    println(printmessage)
+                    Thread.sleep(1000)
+                }
+        Thread.sleep(5000)
+    }
 }
