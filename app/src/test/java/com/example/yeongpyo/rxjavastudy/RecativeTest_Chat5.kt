@@ -2,6 +2,7 @@ package com.example.yeongpyo.rxjavastudy
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
+import io.reactivex.functions.Action
 import io.reactivex.functions.BiFunction
 import io.reactivex.observables.ConnectableObservable
 import io.reactivex.rxkotlin.Observables
@@ -90,13 +91,63 @@ class RecativeTest_Chat5 {
         Observables.zip(
                 Observable.fromIterable(arr.asIterable()),
                 Observable.fromIterable(arrtxt.asIterable()),
-                Observable.fromIterable(arr.asIterable()),
-                {i1, i2, i3 -> "data1 :${i1}, data2 :${i2}, data3 :${i3}"}
-        ).subscribe(System.out::println)
+                Observable.fromIterable(arr.asIterable())
+        ){i1, i2, i3 -> "data1 :${i1}, data2 :${i2}, data3 :${i3}"}
+                .subscribe(System.out::println)
     }
 
     //combinelatest
+    @Test
+    fun rxConbinlate(){
+        val test1 = Observable.just(1,2,3,4,5)
+        val test2 = Observable.just("one")
+        val test3 = Observable.just("two")
+        Observables.combineLatest(test1, test2, test3,
+                {i1, i2, i3 -> "Observable $i1 , $i2 , $i3"})
+                .subscribe(System.out::println)
+    }
 
+    @Test
+    fun rxMerge(){
+        val case1 = arrayOf("1", "3", "5")
+        val case2 = arrayOf("2", "4")
+        val MergeTest1 = Observable.interval(50L, 10L, TimeUnit.MILLISECONDS)
+                .map { i -> case1[i.toInt()] }.take(case1.size.toLong())
+        val MErgeTest2 = Observable.interval(10L, TimeUnit.MILLISECONDS)
+                .map { i -> case2[i.toInt()] }.take(case2.size.toLong())
+        Observable.merge(MergeTest1, MErgeTest2).subscribe(System.out::println)
+        Thread.sleep(2000)
+    }
 
+    @Test
+    fun rxConcat1(){
+        val action = Action{ println("onComple")}
+        val case1 = arrayOf("1", "3", "5")
+        val case2 = arrayOf("2", "4", "6")
+        val Concat1 = Observable.fromIterable(case1.asIterable())
+                .doOnComplete(action)
+        val Concat2 = Observable.fromIterable(case2.asIterable())
+                .doOnComplete(action)
+        Observable.concat(Concat1, Concat2)
+                .doOnComplete(action)
+                .subscribe(System.out::println)
+    }
+
+    @Test
+    fun rxConcat2(){
+        val action = Action{ println("onComple")}
+        val case1 = arrayOf("1", "3", "5")
+        val case2 = arrayOf("2", "4", "6")
+        val Concat1 = Observable.fromIterable(case1.asIterable())
+                .doOnComplete(action)
+        val Concat2 = Observable.interval(10L, TimeUnit.MILLISECONDS)
+                .map { i -> case2[i.toInt()] }.take(case2.size.toLong())
+                .doOnComplete(action)
+        Observable.concat(Concat1, Concat2)
+                .doOnComplete(action)
+                .subscribe(System.out::println)
+
+        Thread.sleep(1000)
+    }
 
 }
