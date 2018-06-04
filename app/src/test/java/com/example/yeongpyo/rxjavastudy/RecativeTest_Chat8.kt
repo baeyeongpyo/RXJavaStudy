@@ -70,4 +70,20 @@ class RecativeTest_Chat8 {
         Thread.sleep(1000)
 
     }
+
+    @Test
+    fun rxIO(){
+        //
+    }
+
+    @Test
+    fun trampoline(){
+        val strings = arrayOf("1", "2", "3")
+        Observable.fromIterable(strings.asIterable())
+                .subscribeOn(Schedulers.trampoline())
+                .map { "<< $it >>" }
+                .subscribe(System.out::println)
+
+        Thread.sleep(300)
+    }
 }
