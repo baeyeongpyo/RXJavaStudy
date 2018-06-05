@@ -1,12 +1,11 @@
 package com.example.yeongpyo.rxjavastudy
 
 import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
+import okhttp3.*
 import org.junit.Test
+import java.io.IOException
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class RecativeTest_Chat9 {
 
@@ -35,8 +34,19 @@ class RecativeTest_Chat9 {
 
     @Test
     fun rxCallback(){
-        val readMe_url = "Http://"
-//        Request.buildr().url(readMe_url).build();
+        val readMe_url = "https://raw.githubusercontent.com/yudong80/reactivejava/master/README.md"
+        val request = Request.Builder().url(readMe_url).build()
+        OkHttpClient().newCall(request).enqueue(object : Callback{
+            override fun onFailure(call: Call?, e: IOException?) {}
+            override fun onResponse(call: Call?, response: Response?) { println(response?.body()?.string()) }
+        })
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun rxcallback2_play(){
+        rxCallbackclass().http_run()
+        Thread.sleep(2000)
     }
 
 }
